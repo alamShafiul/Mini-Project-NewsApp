@@ -24,14 +24,14 @@ class DetailsVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         titleField.text = getHome?.myArticles[(getHome?.idxPath.row)!].title
-        timeField.text = getHome?.myArticles[(getHome?.idxPath!.row)!].publishedAt
+        timeField.text = getHome?.myArticles[(getHome?.idxPath!.row)!].time
         
-        let imgURL = getHome?.myArticles[(getHome?.idxPath.row)!].urlToImage
+        let imgURL = getHome?.myArticles[(getHome?.idxPath.row)!].imgURL
         imgView.sd_setImage(with: URL(string: imgURL ?? ""), placeholderImage: UIImage(systemName: "photo"), context: nil)
         
         
-        authorField.text = "by-\(getHome?.myArticles[(getHome?.idxPath.row)!].author ?? "unknow author")"
-        descField.text = getHome?.myArticles[(getHome?.idxPath.row)!].description
+        authorField.text = "Author: \(getHome?.myArticles[(getHome?.idxPath.row)!].author ?? "unknow author")"
+        descField.text = getHome?.myArticles[(getHome?.idxPath.row)!].desc
         contentField.text = getHome?.myArticles[(getHome?.idxPath.row)!].content
         
     }
@@ -39,7 +39,7 @@ class DetailsVC: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == Constants.gotoWebSegue {
             if let webPage = segue.destination as? WKVC {
-                webPage.forURL = getHome?.myArticles[(getHome?.idxPath.row)!].url
+                webPage.forURL = getHome?.myArticles[(getHome?.idxPath.row)!].URL
             }
         }
     }
