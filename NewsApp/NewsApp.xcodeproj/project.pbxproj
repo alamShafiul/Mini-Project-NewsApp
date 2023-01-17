@@ -21,6 +21,7 @@
 		8482A93B29758D0B00D89265 /* ApiCaller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8482A93A29758D0B00D89265 /* ApiCaller.swift */; };
 		8482A93E29758D7400D89265 /* NewsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8482A93D29758D7400D89265 /* NewsModel.swift */; };
 		8482A940297650E500D89265 /* DetailsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8482A93F297650E500D89265 /* DetailsVC.swift */; };
+		8482A9422976618F00D89265 /* WKVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8482A9412976618F00D89265 /* WKVC.swift */; };
 		87C4CF1D469E018F83E694E0 /* Pods_NewsApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EC283110D141CFDCDFAD617 /* Pods_NewsApp.framework */; };
 /* End PBXBuildFile section */
 
@@ -43,6 +44,7 @@
 		8482A93A29758D0B00D89265 /* ApiCaller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiCaller.swift; sourceTree = "<group>"; };
 		8482A93D29758D7400D89265 /* NewsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsModel.swift; sourceTree = "<group>"; };
 		8482A93F297650E500D89265 /* DetailsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsVC.swift; sourceTree = "<group>"; };
+		8482A9412976618F00D89265 /* WKVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WKVC.swift; sourceTree = "<group>"; };
 		9EC283110D141CFDCDFAD617 /* Pods_NewsApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NewsApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -167,6 +169,7 @@
 			isa = PBXGroup;
 			children = (
 				8482A93A29758D0B00D89265 /* ApiCaller.swift */,
+				8482A9412976618F00D89265 /* WKVC.swift */,
 			);
 			path = "Helper Class";
 			sourceTree = "<group>";
@@ -294,6 +297,7 @@
 				8482A91E297564E300D89265 /* NewsApp.xcdatamodeld in Sources */,
 				8482A916297564E300D89265 /* SceneDelegate.swift in Sources */,
 				8482A93329757E5F00D89265 /* Constants.swift in Sources */,
+				8482A9422976618F00D89265 /* WKVC.swift in Sources */,
 				8482A93B29758D0B00D89265 /* ApiCaller.swift in Sources */,
 				8482A9362975815200D89265 /* CatModel.swift in Sources */,
 				8482A940297650E500D89265 /* DetailsVC.swift in Sources */,

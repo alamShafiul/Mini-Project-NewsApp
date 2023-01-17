@@ -11,5 +11,6 @@ class Constants {
     static let customColCell = "customColCell"
     static let customTblCell = "customTblCell"
     static let gotoDetailsSegue = "gotoDetailsSegue"
+    static let gotoWebSegue = "gotoWebSegue"
     static let apiLink = "https://newsapi.org/v2/top-headlines?country=us&apiKey=dd85f463bc1c4693bc95c1ef41995b09"
 }

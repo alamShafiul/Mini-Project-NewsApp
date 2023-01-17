@@ -36,4 +36,17 @@ class DetailsVC: UIViewController {
         contentField.text = getHome?.myArticles[(getHome?.idxPath.row)!].content
         
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == Constants.gotoWebSegue {
+            if let webPage = segue.destination as? WKVC {
+                webPage.forURL = getHome?.myArticles[(getHome?.idxPath.row)!].url
+            }
+        }
+    }
+    
+    @IBAction func moreBtnTapped(_ sender: Any) {
+        performSegue(withIdentifier: Constants.gotoWebSegue, sender: nil)
+    }
+    
 }

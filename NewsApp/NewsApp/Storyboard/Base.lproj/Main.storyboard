@@ -272,6 +272,9 @@
                                                         </constraints>
                                                         <state key="normal" title="Button"/>
                                                         <buttonConfiguration key="configuration" style="plain" title="More"/>
+                                                        <connections>
+                                                            <action selector="moreBtnTapped:" destination="2Zl-Nd-CqO" eventType="touchUpInside" id="jf0-0r-k7G"/>
+                                                        </connections>
                                                     </button>
                                                 </subviews>
                                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -334,11 +337,28 @@
                         <outlet property="imgView" destination="Dlb-0j-QwL" id="2Mb-by-z1I"/>
                         <outlet property="timeField" destination="4BB-AG-HW9" id="EDU-aH-Uyz"/>
                         <outlet property="titleField" destination="Dbf-vO-XML" id="6Qf-cU-4l2"/>
+                        <segue destination="RdQ-Pk-A6i" kind="show" identifier="gotoWebSegue" id="mmw-fe-aH6"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Rbv-Hu-b7Y" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2959.5419847328244" y="-35.211267605633807"/>
+        </scene>
+        <!--WKVC-->
+        <scene sceneID="hhw-DU-NbJ">
+            <objects>
+                <viewController id="RdQ-Pk-A6i" customClass="WKVC" customModule="NewsApp" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="5iA-DS-vHY">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="VuS-mT-TQc"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="if6-cN-Dfo"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Lfn-em-2em" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4123" y="-35"/>
         </scene>
         <!--Bookmarks-->
         <scene sceneID="XBE-cA-I0y">
