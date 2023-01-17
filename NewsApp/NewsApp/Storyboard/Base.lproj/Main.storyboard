@@ -368,7 +368,7 @@
         <!--Bookmarks-->
         <scene sceneID="XBE-cA-I0y">
             <objects>
-                <viewController id="hBi-bw-n5B" sceneMemberID="viewController">
+                <viewController id="hBi-bw-n5B" customClass="BookmarkVC" customModule="NewsApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="1dw-Mk-bqx">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -383,11 +383,11 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="magnifyingglass" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Vu2-lO-FIO">
-                                        <rect key="frame" x="323" y="14.999999999999996" width="40" height="38.333333333333329"/>
+                                        <rect key="frame" x="333" y="20.000000000000007" width="30" height="28.33333333333335"/>
                                         <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="40" id="Nw2-tx-fWd"/>
-                                            <constraint firstAttribute="width" constant="40" id="dOG-ww-Mgd"/>
+                                            <constraint firstAttribute="height" constant="30" id="Nw2-tx-fWd"/>
+                                            <constraint firstAttribute="width" constant="30" id="dOG-ww-Mgd"/>
                                         </constraints>
                                     </imageView>
                                 </subviews>
@@ -399,17 +399,65 @@
                                     <constraint firstItem="Vu2-lO-FIO" firstAttribute="centerY" secondItem="RMz-NI-akX" secondAttribute="centerY" id="yHM-TC-vcd"/>
                                 </constraints>
                             </view>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="cxw-vm-YK1">
+                                <rect key="frame" x="0.0" y="127" width="393" height="642"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="bookmarkCell" rowHeight="230" id="Abj-iZ-VJa" customClass="bookmarkTVC" customModule="NewsApp" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="50" width="393" height="230"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Abj-iZ-VJa" id="Bdb-1d-KtD">
+                                            <rect key="frame" x="0.0" y="0.0" width="393" height="230"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="photo" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="fCy-xZ-VSv">
+                                                    <rect key="frame" x="28" y="20.666666666666657" width="137.66666666666666" height="189"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="120" id="cP9-cT-jS5"/>
+                                                    </constraints>
+                                                </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oIP-XJ-zB6">
+                                                    <rect key="frame" x="173.66666666666663" y="104.33333333333333" width="191.33333333333337" height="21.666666666666671"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailingMargin" secondItem="oIP-XJ-zB6" secondAttribute="trailing" constant="8" id="BQQ-eY-1To"/>
+                                                <constraint firstItem="fCy-xZ-VSv" firstAttribute="leading" secondItem="Bdb-1d-KtD" secondAttribute="leadingMargin" constant="8" id="EUm-lk-kvE"/>
+                                                <constraint firstItem="fCy-xZ-VSv" firstAttribute="width" secondItem="Bdb-1d-KtD" secondAttribute="width" multiplier="0.35" id="IFa-m5-DuF"/>
+                                                <constraint firstItem="fCy-xZ-VSv" firstAttribute="top" secondItem="Bdb-1d-KtD" secondAttribute="topMargin" constant="8" id="KGT-Bh-LIP"/>
+                                                <constraint firstItem="oIP-XJ-zB6" firstAttribute="leading" secondItem="fCy-xZ-VSv" secondAttribute="trailing" constant="8" id="LQ1-9F-vkP"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="fCy-xZ-VSv" secondAttribute="bottom" constant="8" id="Xlg-oR-ot7"/>
+                                                <constraint firstItem="oIP-XJ-zB6" firstAttribute="centerY" secondItem="Bdb-1d-KtD" secondAttribute="centerY" id="dRB-Vy-zHh"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="imgView" destination="fCy-xZ-VSv" id="Xzh-zQ-SJv"/>
+                                            <outlet property="titleField" destination="oIP-XJ-zB6" id="9vf-V4-Qhe"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="yss-c8-T21"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="yss-c8-T21" firstAttribute="bottom" secondItem="cxw-vm-YK1" secondAttribute="bottom" id="3mj-fr-yNK"/>
                             <constraint firstItem="RMz-NI-akX" firstAttribute="trailing" secondItem="yss-c8-T21" secondAttribute="trailing" id="5z7-aT-uwe"/>
+                            <constraint firstItem="cxw-vm-YK1" firstAttribute="leading" secondItem="yss-c8-T21" secondAttribute="leading" id="Nl8-D0-1QE"/>
                             <constraint firstItem="RMz-NI-akX" firstAttribute="height" secondItem="1dw-Mk-bqx" secondAttribute="height" multiplier="0.08" id="S9u-kq-t0b"/>
+                            <constraint firstItem="cxw-vm-YK1" firstAttribute="top" secondItem="RMz-NI-akX" secondAttribute="bottom" id="SPL-Lv-iwC"/>
+                            <constraint firstItem="yss-c8-T21" firstAttribute="trailing" secondItem="cxw-vm-YK1" secondAttribute="trailing" id="aeN-un-pCf"/>
                             <constraint firstItem="RMz-NI-akX" firstAttribute="leading" secondItem="yss-c8-T21" secondAttribute="leading" id="bB6-6Z-mek"/>
                             <constraint firstItem="RMz-NI-akX" firstAttribute="top" secondItem="yss-c8-T21" secondAttribute="top" id="cbC-Ba-CC1"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Bookmarks" image="bookmark" catalog="system" id="0W9-dt-L6s"/>
+                    <connections>
+                        <outlet property="tableView" destination="cxw-vm-YK1" id="i60-tJ-hcF"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oMS-cQ-h22" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

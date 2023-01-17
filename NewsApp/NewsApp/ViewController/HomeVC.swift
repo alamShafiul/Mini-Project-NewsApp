@@ -56,10 +56,10 @@ class HomeVC: UIViewController {
 
 //MARK: - All functions
 extension HomeVC {
+    //MARK: refreshTable
     @objc func refreshTable() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-//            CoreDataManager.shared.getData(category: "All")
             print("refreshed....")
             self.pleaseCallAPI(category: CatModels.category[self.selectedIndexForCV.row])
             self.tableView.reloadData()
@@ -67,20 +67,19 @@ extension HomeVC {
         }
     }
     
+    //MARK: populateTableView
     func populateTableView(category: String) {
         // checking CoreData is empty or not
         CoreDataManager.shared.getData(category: category)
-        // means CoreData is empty
         if(CoreDataManager.shared.newses.count == 0) {
             pleaseCallAPI(category: category)
-        } // fetch from Core Data
+        }
         else {
             getFromCoreData(category: category)
         }
-        
-        //pleaseCallAPI(category: category)
     }
     
+    //MARK: storeInCoreData
     func storeInCoreData(category: String) {
         for item in myArticles {
             let val = NewsesMODEL(title: item.title, time: item.time, imgURL: item.imgURL, URL: item.URL, author: item.author, desc: item.desc, content: item.content, category: category)
@@ -88,6 +87,7 @@ extension HomeVC {
         }
     }
     
+    //MARK: getFromCoreData
     func getFromCoreData(category: String) {
         CoreDataManager.shared.getData(category: category)
         let newses = CoreDataManager.shared.newses
@@ -101,6 +101,7 @@ extension HomeVC {
         tableView.reloadData()
     }
     
+    //MARK: pleaseCallAPI
     func pleaseCallAPI(category: String) {
         activityIndicator.startAnimating()
         ApiCaller.shared.getDataFromAPI(category: category, completion: { [weak self] getArray in
@@ -115,11 +116,18 @@ extension HomeVC {
         })
     }
     
+    //MARK: bookMark
+    func bookMark(indexPath: IndexPath) {
+        
+    }
+    
+    //MARK: setupCollectionView
     func setupCollectionView() {
         collectionView.delegate = self
         collectionView.dataSource = self
     }
     
+    //MARK: setupTableView
     func setupTableView() {
         tableView.delegate = self
         tableView.dataSource = self
@@ -193,6 +201,24 @@ extension HomeVC: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         idxPath = indexPath
         performSegue(withIdentifier: Constants.gotoDetailsSegue, sender: nil)
+    }
+    
+    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+
+        let bookmarkAction = UIContextualAction(style: .normal, title: nil) { [weak self]
+            _, _, _ in
+            guard let self = self else {
+                return
+            }
+            self.bookMark(indexPath: indexPath)
+            //completion(true)
+        }
+        bookmarkAction.image = UIImage(systemName: "bookmark.fill")
+        bookmarkAction.backgroundColor = .systemYellow
+        
+        let actions = UISwipeActionsConfiguration(actions: [bookmarkAction])
+        
+        return actions
     }
 }
 
