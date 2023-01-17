@@ -25,7 +25,6 @@ class DetailsVC: UIViewController {
         super.viewDidLoad()
         titleField.text = getHome?.myArticles[(getHome?.idxPath.row)!].title
         timeField.text = getHome?.myArticles[(getHome?.idxPath!.row)!].publishedAt
-//        imgView.text = getHome?.myArticles[getHome?.idxPath?.row].title
         
         let imgURL = getHome?.myArticles[(getHome?.idxPath.row)!].urlToImage
         imgView.sd_setImage(with: URL(string: imgURL ?? ""), placeholderImage: UIImage(systemName: "photo"), context: nil)

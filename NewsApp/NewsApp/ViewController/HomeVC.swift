@@ -33,7 +33,6 @@ class HomeVC: UIViewController {
 //MARK: - ViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        //navigationController?.isNavigationBarHidden = true
         
         setupCollectionView()
         setupTableView()
@@ -128,7 +127,9 @@ extension HomeVC: UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Constants.customTblCell, for: indexPath) as! customTVC
+        
         cell.imgView.layer.cornerRadius = 15
+        
         cell.imgView.sd_setImage(with: URL(string: myArticles[indexPath.row].urlToImage ?? ""), placeholderImage: UIImage(systemName: "photo"), context: nil)
         cell.titleField.text = myArticles[indexPath.row].title
         cell.authorField.text = myArticles[indexPath.row].author ?? "unknown author"
