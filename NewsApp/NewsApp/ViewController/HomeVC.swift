@@ -11,18 +11,29 @@ import SDWebImage
 class HomeVC: UIViewController {
     
 //MARK: - variables
-    var selectedIndex = IndexPath(item: 0, section: 0)
+    var selectedIndexForCV = IndexPath(item: 0, section: 0)
     var myArticles = [Article]()
+    var idxPath: IndexPath!
     
 //MARK: - Outlets
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+ 
+//MARK: - For Controlling Navigation Bar
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.isNavigationBarHidden = true
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        navigationController?.isNavigationBarHidden = false
+    }
     
     
 //MARK: - ViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
+        //navigationController?.isNavigationBarHidden = true
         
         setupCollectionView()
         setupTableView()
@@ -30,7 +41,14 @@ class HomeVC: UIViewController {
         pleaseCallAPI(category: "All")
         tableView.reloadData()
     }
-
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if(segue.identifier == Constants.gotoDetailsSegue) {
+            if let detailsPage = segue.destination as? DetailsVC {
+                detailsPage.getHome = self
+            }
+        }
+    }
 
 }
 
@@ -70,10 +88,10 @@ extension HomeVC: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.customColCell, for: indexPath) as! customCVC
         
-        cell.catLabel.text = CatModels.category[indexPath.row]
+        cell.catLabel.text = CatModels.category[indexPath.row].capitalized
         cell.bgView.backgroundColor = .white
         
-        if(indexPath == selectedIndex) {
+        if(indexPath == selectedIndexForCV) {
             cell.bgView.backgroundColor = .systemGray4
         }
         
@@ -90,7 +108,7 @@ extension HomeVC: UICollectionViewDelegate {
         
         pleaseCallAPI(category: CatModels.category[indexPath.row])
         
-        selectedIndex = indexPath
+        selectedIndexForCV = indexPath
         cell.bgView.backgroundColor = .systemGray
         collectionView.reloadData()
     }
@@ -124,6 +142,7 @@ extension HomeVC: UITableViewDataSource {
 extension HomeVC: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        idxPath = indexPath
         performSegue(withIdentifier: Constants.gotoDetailsSegue, sender: nil)
     }
 }
