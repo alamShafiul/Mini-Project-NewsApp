@@ -56,7 +56,7 @@ class HomeVC: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if(segue.identifier == Constants.gotoDetailsSegue) {
             if let detailsPage = segue.destination as? DetailsVC {
-                //detailsPage.getHome = self
+                detailsPage.getHome = self
                 detailsPage.ti_tle = myArticles[idxPath.row].title
                 detailsPage.time = myArticles[idxPath.row].time
                 detailsPage.imgURL = myArticles[idxPath.row].imgURL
@@ -64,6 +64,7 @@ class HomeVC: UIViewController {
                 detailsPage.author = myArticles[idxPath.row].author
                 detailsPage.content = myArticles[idxPath.row].content
                 detailsPage.desc = myArticles[idxPath.row].desc
+                detailsPage.bookmarkTick = myArticles[idxPath.row].bookmarkTick
             }
         }
     }
@@ -80,7 +81,8 @@ extension HomeVC {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             print("refreshed....")
-            //self.pleaseCallAPI(category: CatModels.category[self.selectedIndexForCV.row])
+            CoreDataManager.shared.deleteData(category: CatModels.category[self.selectedIndexForCV.row])
+            self.pleaseCallAPI(category: CatModels.category[self.selectedIndexForCV.row])
             self.tableView.reloadData()
             self.refreshControl.endRefreshing()
         }
@@ -108,7 +110,14 @@ extension HomeVC {
     //MARK: storeInCoreData
     func storeInCoreData(category: String) {
         for item in myArticles {
-            let val = NewsesMODEL(title: item.title, time: item.time, imgURL: item.imgURL, URL: item.URL, author: item.author, desc: item.desc, content: item.content, category: category, bookmarkTick: false)
+            var flag = false
+            for book in CoreDataManager.shared.bookmarks {
+                if(item.URL == book.url) {
+                    flag = true
+                    break
+                }
+            }
+            let val = NewsesMODEL(title: item.title, time: item.time, imgURL: item.imgURL, URL: item.URL, author: item.author, desc: item.desc, content: item.content, category: category, bookmarkTick: flag)
             CoreDataManager.shared.addData(newsModel: val)
         }
     }
@@ -138,12 +147,15 @@ extension HomeVC {
     func pleaseCallAPI(category: String) {
         activityIndicator.startAnimating()
         ApiCaller.shared.getDataFromAPI(category: category, completion: { [weak self] getArray in
+            guard let self = self else { return }
             if let getArray = getArray {
                 DispatchQueue.main.async {
-                    self?.myArticles = getArray
-                    self?.storeInCoreData(category: category)
-                    self?.tableView.reloadData()
-                    self?.activityIndicator.stopAnimating()
+                    self.myArticles = getArray
+                    self.storeInCoreData(category: category)
+                    //specifically changed for bookmark when pull to refresh is applied
+                    self.populateTableView(category: category)
+                    self.tableView.reloadData()
+                    self.activityIndicator.stopAnimating()
                 }
             }
         })

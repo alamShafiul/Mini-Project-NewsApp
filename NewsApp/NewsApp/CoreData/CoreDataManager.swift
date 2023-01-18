@@ -95,30 +95,43 @@ class CoreDataManager {
         }
     }
     
-    func deleteData(indexPath: IndexPath) {
-        let existedRow = newses[indexPath.row]
-        context.delete(existedRow)
+    func deleteData(category: String) {
+        for news in newses {
+            if(news.category == category) {
+                context.delete(news)
+            }
+        }
         
         do{
             try context.save()
-            newses.remove(at: indexPath.row)
+//            newses.remove(at: indexPath.row)
         }
         catch {
             print(error)
         }
     }
     
-    func deleteFromBookmark(indexPath: IndexPath) {
-        let findURL = bookmarks[indexPath.row].url
-        for item in newses {
-            if(item.url == findURL) {
-                item.bookmarkTick = false
-                break
+    func deleteFromBookmark(indexPath: IndexPath, from: String) {
+        if(from == "BookmarkVC") {
+            let findURL = bookmarks[indexPath.row].url
+            for item in newses {
+                if(item.url == findURL) {
+                    item.bookmarkTick = false
+                    context.delete(bookmarks[indexPath.row])
+                    break
+                }
             }
         }
-        let existedRow = bookmarks[indexPath.row]
-        context.delete(existedRow)
-        
+        else {
+            let findURL = newses[indexPath.row].url
+            newses[indexPath.row].bookmarkTick = false
+            for item in bookmarks {
+                if(item.url == findURL) {
+                    context.delete(item)
+                    break
+                }
+            }
+        }
         do{
             try context.save()
             bookmarks.remove(at: indexPath.row)

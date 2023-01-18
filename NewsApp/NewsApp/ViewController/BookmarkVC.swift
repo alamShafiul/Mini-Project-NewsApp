@@ -41,7 +41,7 @@ class BookmarkVC: UIViewController {
     }
 
     func handleDeleteAction(indexPath: IndexPath) {
-        CoreDataManager.shared.deleteFromBookmark(indexPath: indexPath)
+        CoreDataManager.shared.deleteFromBookmark(indexPath: indexPath, from: "BookmarkVC")
         tableView.reloadData()
 
     }
@@ -56,6 +56,7 @@ class BookmarkVC: UIViewController {
                 detailsPage.author = myArticles[idxPath.row].author
                 detailsPage.content = myArticles[idxPath.row].content
                 detailsPage.desc = myArticles[idxPath.row].desc
+                detailsPage.bookmarkTick = true
             }
         }
     }

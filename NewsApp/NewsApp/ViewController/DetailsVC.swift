@@ -18,10 +18,12 @@ class DetailsVC: UIViewController {
     var author: String = "unknown author"
     var content: String = ""
     var desc: String = ""
+    var bookmarkTick: Bool = false
     
     @IBOutlet weak var titleField: UILabel!
     @IBOutlet weak var timeField: UILabel!
     
+    @IBOutlet weak var bookmarkBtnOutlet: UIButton!
     @IBOutlet weak var imgView: UIImageView!
     
     @IBOutlet weak var authorField: UILabel!
@@ -38,6 +40,7 @@ class DetailsVC: UIViewController {
         authorField.text = author
         descField.text = desc
         contentField.text = content
+        bookmarkBtnOutlet.setImage(UIImage(systemName: bookmarkTick ? "bookmark.fill" : "bookmark"), for: .normal)
         
     }
     
@@ -51,6 +54,23 @@ class DetailsVC: UIViewController {
     
     @IBAction func moreBtnTapped(_ sender: Any) {
         performSegue(withIdentifier: Constants.gotoWebSegue, sender: nil)
+    }
+    
+    
+    @IBAction func bookmarkBtnTapped(_ sender: Any) {
+        
+        guard let getHome = getHome else {
+            return
+        }
+        
+        if bookmarkBtnOutlet.imageView?.image == UIImage(systemName: "bookmark") {
+            bookmarkBtnOutlet.setImage(UIImage(systemName: "bookmark.fill"), for: .normal)
+            getHome.bookMark(indexPath: (getHome.idxPath))
+        }
+        else {
+            bookmarkBtnOutlet.setImage(UIImage(systemName: "bookmark"), for: .normal)
+            CoreDataManager.shared.deleteFromBookmark(indexPath: (getHome.idxPath)!, from: "DetailsVC")
+        }
     }
     
 }
