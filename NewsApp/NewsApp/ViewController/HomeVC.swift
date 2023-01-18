@@ -118,7 +118,14 @@ extension HomeVC {
     
     //MARK: bookMark
     func bookMark(indexPath: IndexPath) {
-        
+        CoreDataManager.shared.getFromBookmark(newsUrl: myArticles[indexPath.row].URL)
+        if(CoreDataManager.shared.bookmarks.count == 1) {
+            // show some alert
+        }
+        else {
+            CoreDataManager.shared.addToBookTable(newsModel: myArticles[indexPath.row])
+            print("Add")
+        }
     }
     
     //MARK: setupCollectionView

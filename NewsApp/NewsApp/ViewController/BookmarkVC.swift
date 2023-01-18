@@ -18,18 +18,54 @@ class BookmarkVC: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        CoreDataManager.shared.getFromBookmark(newsUrl: nil)
+        tableView.reloadData()
+    }
+
+    func handleDeleteAction(indexPath: IndexPath) {
+        CoreDataManager.shared.deleteFromBookmark(indexPath: indexPath)
+        tableView.reloadData()
+    }
+    
 }
 
 extension BookmarkVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        10
+        CoreDataManager.shared.bookmarks.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Constants.bookmarkCell, for: indexPath) as! bookmarkTVC
         
-        cell.titleField.text = "Title"
+        cell.imgView.layer.cornerRadius = 15
+        
+        let imgURL = URL(string: CoreDataManager.shared.bookmarks[indexPath.row].imgURL ?? "")
+        cell.imgView.sd_setImage(with: imgURL, placeholderImage: UIImage(systemName: "photo"), context: nil)
+        cell.titleField.text = CoreDataManager.shared.bookmarks[indexPath.row].title
         
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        let deleteAction = UIContextualAction(style: .destructive, title: nil) { [weak self] _, _, completion in
+            guard let self = self else {
+                return
+            }
+            self.handleDeleteAction(indexPath: indexPath)
+            completion(true)
+        }
+        deleteAction.image = UIImage(systemName: "trash")
+        deleteAction.backgroundColor = .systemRed
+        
+        let swipeAction = UISwipeActionsConfiguration(actions: [deleteAction])
+        
+        return swipeAction
     }
 }
