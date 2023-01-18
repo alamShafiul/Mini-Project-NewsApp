@@ -17,6 +17,9 @@ class customTVC: UITableViewCell {
     
     @IBOutlet weak var dateField: UILabel!
     
+    @IBOutlet weak var bookmarkView: UIImageView!
+    
+    
     override func awakeFromNib() {
         super.awakeFromNib()
     }

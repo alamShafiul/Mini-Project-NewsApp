@@ -20,7 +20,7 @@ class HomeVC: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
- 
+    
 //MARK: - For Controlling Navigation Bar
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.isNavigationBarHidden = true
@@ -47,7 +47,14 @@ class HomeVC: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if(segue.identifier == Constants.gotoDetailsSegue) {
             if let detailsPage = segue.destination as? DetailsVC {
-                detailsPage.getHome = self
+                //detailsPage.getHome = self
+                detailsPage.ti_tle = myArticles[idxPath.row].title
+                detailsPage.time = myArticles[idxPath.row].time
+                detailsPage.imgURL = myArticles[idxPath.row].imgURL
+                detailsPage.url = myArticles[idxPath.row].URL
+                detailsPage.author = myArticles[idxPath.row].author
+                detailsPage.content = myArticles[idxPath.row].content
+                detailsPage.desc = myArticles[idxPath.row].desc
             }
         }
     }
@@ -117,7 +124,7 @@ extension HomeVC {
     }
     
     //MARK: bookMark
-    func bookMark(indexPath: IndexPath) {
+    func bookMark(indexPath: IndexPath)  {
         CoreDataManager.shared.getFromBookmark(newsUrl: myArticles[indexPath.row].URL)
         if(CoreDataManager.shared.bookmarks.count == 1) {
             // show some alert
