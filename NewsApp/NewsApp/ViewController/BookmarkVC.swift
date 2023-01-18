@@ -28,7 +28,7 @@ class BookmarkVC: UIViewController {
         let Bookmarks = CoreDataManager.shared.bookmarks
         for bookmark in Bookmarks {
             if let title = bookmark.title, let time = bookmark.time, let imgURL = bookmark.imgURL, let URL = bookmark.url, let author = bookmark.author, let desc = bookmark.desc, let content = bookmark.content, let category = bookmark.category {
-                let val = NewsesMODEL(title: title, time: time, imgURL: imgURL, URL: URL, author: author, desc: desc, content: content, category: category)
+                let val = NewsesMODEL(title: title, time: time, imgURL: imgURL, URL: URL, author: author, desc: desc, content: content, category: category, bookmarkTick: false)
                 myArticles.append(val)
             }
         }
@@ -43,6 +43,7 @@ class BookmarkVC: UIViewController {
     func handleDeleteAction(indexPath: IndexPath) {
         CoreDataManager.shared.deleteFromBookmark(indexPath: indexPath)
         tableView.reloadData()
+
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

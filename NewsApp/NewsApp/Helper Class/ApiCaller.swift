@@ -46,7 +46,7 @@ class ApiCaller {
 //                        tempItem.category = category!
                         
                         if let title = item.title, let time = item.publishedAt, let imgURL = item.urlToImage, let url = item.url, let author = item.author, let desc = item.description, let content = item.content {
-                            let tempItem = NewsesMODEL(title: title, time: time, imgURL: imgURL, URL: url, author: author, desc: desc, content: content, category: category!)
+                            let tempItem = NewsesMODEL(title: title, time: time, imgURL: imgURL, URL: url, author: author, desc: desc, content: content, category: category!, bookmarkTick: false)
                             tempArray.append(tempItem)
                         }
                     }

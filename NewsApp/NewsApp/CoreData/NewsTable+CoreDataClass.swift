@@ -2,7 +2,7 @@
 //  NewsTable+CoreDataClass.swift
 //  NewsApp
 //
-//  Created by Admin on 17/1/23.
+//  Created by Admin on 18/1/23.
 //
 //
 

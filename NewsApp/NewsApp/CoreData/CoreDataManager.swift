@@ -54,6 +54,7 @@ class CoreDataManager {
         newRow.desc = newsModel.desc
         newRow.content = newsModel.content
         newRow.category = newsModel.category
+        newRow.bookmarkTick = newsModel.bookmarkTick
         
         do {
             try context.save()
@@ -84,17 +85,8 @@ class CoreDataManager {
         }
     }
     
-    func updateData(newsModel: NewsesMODEL, indexPath: IndexPath) {
-        let existedRow = newses[indexPath.row]
-        existedRow.title = newsModel.title
-        existedRow.time = newsModel.time
-        existedRow.imgURL = newsModel.imgURL
-        existedRow.url = newsModel.URL
-        existedRow.author = newsModel.author
-        existedRow.desc = newsModel.desc
-        existedRow.content = newsModel.content
-        existedRow.category = newsModel.category
-        
+    func updateData(indexPath: IndexPath, flag: Bool) {
+        newses[indexPath.row].bookmarkTick = flag
         do{
             try context.save()
         }
@@ -117,6 +109,13 @@ class CoreDataManager {
     }
     
     func deleteFromBookmark(indexPath: IndexPath) {
+        let findURL = bookmarks[indexPath.row].url
+        for item in newses {
+            if(item.url == findURL) {
+                item.bookmarkTick = false
+                break
+            }
+        }
         let existedRow = bookmarks[indexPath.row]
         context.delete(existedRow)
         

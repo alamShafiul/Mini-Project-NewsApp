@@ -10,25 +10,34 @@ import SDWebImage
 
 class HomeVC: UIViewController {
     
+    
 //MARK: - variables
     var selectedIndexForCV = IndexPath(item: 0, section: 0)
     var myArticles = [NewsesMODEL]()
     var idxPath: IndexPath!
     var refreshControl = UIRefreshControl()
     
+    
+    
 //MARK: - Outlets
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
+    
+    
+    
 //MARK: - For Controlling Navigation Bar
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.isNavigationBarHidden = true
+        populateTableView(category: CatModels.category[selectedIndexForCV.row])
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         navigationController?.isNavigationBarHidden = false
     }
+    
+    
     
     
 //MARK: - ViewDidLoad
@@ -61,6 +70,9 @@ class HomeVC: UIViewController {
 
 }
 
+
+
+
 //MARK: - All functions
 extension HomeVC {
     //MARK: refreshTable
@@ -68,16 +80,20 @@ extension HomeVC {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             print("refreshed....")
-            self.pleaseCallAPI(category: CatModels.category[self.selectedIndexForCV.row])
+            //self.pleaseCallAPI(category: CatModels.category[self.selectedIndexForCV.row])
             self.tableView.reloadData()
             self.refreshControl.endRefreshing()
         }
     }
     
+    
+    
+    
     //MARK: populateTableView
     func populateTableView(category: String) {
         // checking CoreData is empty or not
         CoreDataManager.shared.getData(category: category)
+        
         if(CoreDataManager.shared.newses.count == 0) {
             pleaseCallAPI(category: category)
         }
@@ -86,42 +102,55 @@ extension HomeVC {
         }
     }
     
+    
+    
+    
     //MARK: storeInCoreData
     func storeInCoreData(category: String) {
         for item in myArticles {
-            let val = NewsesMODEL(title: item.title, time: item.time, imgURL: item.imgURL, URL: item.URL, author: item.author, desc: item.desc, content: item.content, category: category)
+            let val = NewsesMODEL(title: item.title, time: item.time, imgURL: item.imgURL, URL: item.URL, author: item.author, desc: item.desc, content: item.content, category: category, bookmarkTick: false)
             CoreDataManager.shared.addData(newsModel: val)
         }
     }
     
+    
+    
+    
     //MARK: getFromCoreData
     func getFromCoreData(category: String) {
-        CoreDataManager.shared.getData(category: category)
+        //CoreDataManager.shared.getData(category: category)
         let newses = CoreDataManager.shared.newses
         myArticles = []
         for news in newses {
             if let title = news.title, let time = news.time, let imgURL = news.imgURL, let URL = news.url, let author = news.author, let desc = news.desc, let content = news.content, let category = news.category {
-                let val = NewsesMODEL(title: title, time: time, imgURL: imgURL, URL: URL, author: author, desc: desc, content: content, category: category)
+                let val = NewsesMODEL(title: title, time: time, imgURL: imgURL, URL: URL, author: author, desc: desc, content: content, category: category, bookmarkTick: news.bookmarkTick)
                 myArticles.append(val)
             }
         }
         tableView.reloadData()
     }
     
+    
+    
+    
+    
     //MARK: pleaseCallAPI
     func pleaseCallAPI(category: String) {
         activityIndicator.startAnimating()
         ApiCaller.shared.getDataFromAPI(category: category, completion: { [weak self] getArray in
             if let getArray = getArray {
-                self?.myArticles = getArray
-                self?.storeInCoreData(category: category)
                 DispatchQueue.main.async {
+                    self?.myArticles = getArray
+                    self?.storeInCoreData(category: category)
                     self?.tableView.reloadData()
                     self?.activityIndicator.stopAnimating()
                 }
             }
         })
     }
+    
+    
+    
     
     //MARK: bookMark
     func bookMark(indexPath: IndexPath)  {
@@ -131,9 +160,15 @@ extension HomeVC {
         }
         else {
             CoreDataManager.shared.addToBookTable(newsModel: myArticles[indexPath.row])
-            print("Add")
+            
+            CoreDataManager.shared.getData(category: CatModels.category[selectedIndexForCV.row])
+            CoreDataManager.shared.updateData(indexPath: indexPath, flag: true)
+            getFromCoreData(category: CatModels.category[selectedIndexForCV.row])
         }
     }
+    
+    
+    
     
     //MARK: setupCollectionView
     func setupCollectionView() {
@@ -141,12 +176,19 @@ extension HomeVC {
         collectionView.dataSource = self
     }
     
+    
+    
+    
     //MARK: setupTableView
     func setupTableView() {
         tableView.delegate = self
         tableView.dataSource = self
     }
 }
+
+
+
+
 
 //MARK: - collectionViewDataSource
 extension HomeVC: UICollectionViewDataSource {
@@ -190,6 +232,10 @@ extension HomeVC: UICollectionViewDelegate {
     }
 }
 
+
+
+
+
 //MARK: - TableViewDataSource
 extension HomeVC: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -204,6 +250,11 @@ extension HomeVC: UITableViewDataSource {
         cell.titleField.text = myArticles[indexPath.row].title
         cell.authorField.text = myArticles[indexPath.row].author
         cell.dateField.text = myArticles[indexPath.row].time
+        cell.bookmarkView.image = UIImage(systemName: "bookmark")
+        
+        if(myArticles[indexPath.row].bookmarkTick == true) {
+            cell.bookmarkView.image = UIImage(systemName: "bookmark.fill")
+        }
         
         return cell
     }
@@ -225,6 +276,7 @@ extension HomeVC: UITableViewDelegate {
                 return
             }
             self.bookMark(indexPath: indexPath)
+            
             //completion(true)
         }
         bookmarkAction.image = UIImage(systemName: "bookmark.fill")
