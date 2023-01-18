@@ -1,24 +1,16 @@
 //
-//  customTVC.swift
+//  bookmarkTVC.swift
 //  NewsApp
 //
-//  Created by Admin on 16/1/23.
+//  Created by Admin on 17/1/23.
 //
 
 import UIKit
 
-class customTVC: UITableViewCell {
+class bookmarkTVC: UITableViewCell {
 
     @IBOutlet weak var imgView: UIImageView!
-    
     @IBOutlet weak var titleField: UILabel!
-    
-    @IBOutlet weak var authorField: UILabel!
-    
-    @IBOutlet weak var dateField: UILabel!
-    
-    @IBOutlet weak var bookmarkView: UIImageView!
-    
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -26,7 +18,7 @@ class customTVC: UITableViewCell {
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-        
+
     }
 
 }
