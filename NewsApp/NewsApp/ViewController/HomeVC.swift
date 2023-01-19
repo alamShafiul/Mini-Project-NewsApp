@@ -10,13 +10,14 @@ import SDWebImage
 
 class HomeVC: UIViewController {
     
+
     
 //MARK: - variables
+    //var currentoffset = 0
     var selectedIndexForCV = IndexPath(item: 0, section: 0)
     var myArticles = [NewsesMODEL]()
     var idxPath: IndexPath!
     var refreshControl = UIRefreshControl()
-    
     
     
 //MARK: - Outlets
@@ -41,8 +42,6 @@ class HomeVC: UIViewController {
     }
     
     
-    
-    
 //MARK: - ViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,13 +50,13 @@ class HomeVC: UIViewController {
         setupTableView()
         searchBar.delegate = self
         
+        autoRefresh()
         populateTableView(category: "All")
         
         refreshControl.addTarget(self, action: #selector(refreshTable), for: UIControl.Event.valueChanged)
         tableView.addSubview(refreshControl)
         
     }
-    
     
     
     //MARK: - Action Buttons
@@ -81,15 +80,56 @@ class HomeVC: UIViewController {
             }
         }
     }
-    
-
 }
-
-
 
 
 //MARK: - All functions
 extension HomeVC {
+    
+    //MARK: autoRefresh
+    func autoRefresh() {
+        
+        // return value in minute
+        let prev = UserDefaults.standard.string(forKey: CatModels.category[selectedIndexForCV.row]) ?? ""
+        let totalClosedTime = calculateClosingTime2(time: prev)
+        print(totalClosedTime)
+        if(totalClosedTime >= 1.2) {
+            pleaseCallAPI(category: CatModels.category[selectedIndexForCV.row])
+        }
+        else {
+            populateTableView(category: CatModels.category[selectedIndexForCV.row])
+        }
+    }
+    
+    func calculateClosingTime() -> Double {
+        let formatter = DateFormatter()
+        //formatter.dateFormat = "yyyy-MM-dd-hh-mm-ss"
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+        
+        let closingTime = UserDefaults.standard.string(forKey: CatModels.category[selectedIndexForCV.row]) ?? ""
+        print("closingTime: \(closingTime)")
+        guard let closedTime = formatter.date(from: closingTime) else {
+            return 0
+        }
+        print("closed: \(closedTime)")
+        let sec = Date().timeIntervalSince(closedTime)
+        let min = round(sec/60)
+        print("sec: \(sec), min: \(min)")
+        return min
+    }
+    
+    func calculateClosingTime2(time: String) -> Double {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+
+        let date = dateFormatter.date(from: time)
+        guard let date = date else {return 0.0}
+        let passedTimeInSecond =  Date().timeIntervalSince(date)
+        let minutes = round(passedTimeInSecond/60)
+        return minutes
+    }
+    
+    
     //MARK: refreshTable
     @objc func refreshTable() {
         DispatchQueue.main.async { [weak self] in
@@ -103,10 +143,9 @@ extension HomeVC {
     }
     
     
-    
-    
     //MARK: populateTableView
     func populateTableView(category: String) {
+        
         // checking CoreData is empty or not
         CoreDataManager.shared.getData(category: category, searchText: " ")
         
@@ -117,8 +156,6 @@ extension HomeVC {
             getFromCoreData(category: category)
         }
     }
-    
-    
     
     
     //MARK: storeInCoreData
@@ -137,8 +174,6 @@ extension HomeVC {
     }
     
     
-    
-    
     //MARK: getFromCoreData
     func getFromCoreData(category: String) {
         //CoreDataManager.shared.getData(category: category)
@@ -154,9 +189,6 @@ extension HomeVC {
     }
     
     
-    
-    
-    
     //MARK: pleaseCallAPI
     func pleaseCallAPI(category: String) {
         activityIndicator.startAnimating()
@@ -170,12 +202,14 @@ extension HomeVC {
                     self.populateTableView(category: category)
                     self.tableView.reloadData()
                     self.activityIndicator.stopAnimating()
+                    
+                    //let formatter = DateFormatter()
+                    //formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+                    //UserDefaults.standard.set(formatter.string(from: Date()), forKey: CatModels.category[self.selectedIndexForCV.row])
                 }
             }
         })
     }
-    
-    
     
     
     //MARK: bookMark
@@ -193,27 +227,20 @@ extension HomeVC {
         }
     }
     
-    
-    
-    
+
     //MARK: setupCollectionView
     func setupCollectionView() {
         collectionView.delegate = self
         collectionView.dataSource = self
     }
     
-    
-    
-    
+
     //MARK: setupTableView
     func setupTableView() {
         tableView.delegate = self
         tableView.dataSource = self
     }
 }
-
-
-
 
 
 //MARK: - collectionViewDataSource
@@ -223,14 +250,11 @@ extension HomeVC: UICollectionViewDataSource {
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.customColCell, for: indexPath) as! customCVC
-        
         cell.catLabel.text = CatModels.category[indexPath.row].capitalized
         cell.bgView.backgroundColor = .white
-        
         if(indexPath == selectedIndexForCV) {
             cell.bgView.backgroundColor = .systemGray4
         }
-        
         return cell
     }
 }
@@ -241,7 +265,7 @@ extension HomeVC: UICollectionViewDelegate {
         guard let cell = collectionView.cellForItem(at: indexPath) as? customCVC else {
             return
         }
-        
+        //autoRefresh()
         //pleaseCallAPI(category: CatModels.category[indexPath.row])
         populateTableView(category: CatModels.category[indexPath.row])
         
@@ -259,9 +283,6 @@ extension HomeVC: UICollectionViewDelegate {
 }
 
 
-
-
-
 //MARK: - TableViewDataSource
 extension HomeVC: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -271,20 +292,18 @@ extension HomeVC: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: Constants.customTblCell, for: indexPath) as! customTVC
         
         cell.imgView.layer.cornerRadius = 15
-        
         cell.imgView.sd_setImage(with: URL(string: myArticles[indexPath.row].imgURL), placeholderImage: UIImage(systemName: "photo"), context: nil)
         cell.titleField.text = myArticles[indexPath.row].title
         cell.authorField.text = myArticles[indexPath.row].author
         cell.dateField.text = myArticles[indexPath.row].time
         cell.bookmarkView.image = UIImage(systemName: "bookmark")
-        
         if(myArticles[indexPath.row].bookmarkTick == true) {
             cell.bookmarkView.image = UIImage(systemName: "bookmark.fill")
         }
-        
         return cell
     }
 }
+
 
 //MARK: - TableViewDelegate
 extension HomeVC: UITableViewDelegate {
@@ -295,24 +314,20 @@ extension HomeVC: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-
         let bookmarkAction = UIContextualAction(style: .normal, title: nil) { [weak self]
             _, _, _ in
             guard let self = self else {
                 return
             }
             self.bookMark(indexPath: indexPath)
-            
-            //completion(true)
         }
         bookmarkAction.image = UIImage(systemName: "bookmark.fill")
         bookmarkAction.backgroundColor = .systemYellow
-        
         let actions = UISwipeActionsConfiguration(actions: [bookmarkAction])
-        
         return actions
     }
 }
+
 
 //MARK: - SearchBarDelegate
 extension HomeVC: UISearchBarDelegate {
@@ -337,3 +352,17 @@ extension HomeVC: UISearchBarDelegate {
     }
 }
 
+
+//extension HomeVC{
+//    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+//        //print(indexPath)
+//        if indexPath.row == (myArticles.count - 1) {
+//            print(currentoffset)
+//
+//            //myArticles.append(())
+//            currentoffset = currentoffset + 10
+//
+//        }
+//    }
+//
+//}

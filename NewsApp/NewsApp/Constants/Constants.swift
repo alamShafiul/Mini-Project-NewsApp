@@ -12,7 +12,8 @@ class Constants {
     static let customTblCell = "customTblCell"
     static let gotoDetailsSegue = "gotoDetailsSegue"
     static let gotoWebSegue = "gotoWebSegue"
-    static let apiLink = "https://newsapi.org/v2/top-headlines?country=us&apiKey=dd85f463bc1c4693bc95c1ef41995b09"
+//    static let apiLink = "https://newsapi.org/v2/top-headlines?country=us&apiKey=dd85f463bc1c4693bc95c1ef41995b09"
+    static let apiLink = "https://newsapi.org/v2/top-headlines?country=us&apiKey=173f2871bb654377a5d342f467a4b697"
     static let bookmarkCell = "bookmarkCell"
     static let detailsFromBookmarkVC = "detailsFromBookmarkVC"
 }
