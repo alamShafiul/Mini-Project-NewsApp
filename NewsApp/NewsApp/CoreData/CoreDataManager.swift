@@ -14,13 +14,14 @@ class CoreDataManager {
     
     var newses = [NewsTable]()
     var bookmarks = [BookmarkTable]()
+    var searchBookmarks = [BookmarkTable]()
     let context = AppDelegate.shared.persistentContainer.viewContext
     
-    func getData(category: String?) {
+    func getData(category: String?, searchText: String) {
         do {
             let request = NSFetchRequest<NewsTable>(entityName: "NewsTable")
             if let category = category {
-                let predicate = NSPredicate(format: "category == %@", category)
+                let predicate = NSPredicate(format: "category == %@ AND title CONTAINS %@", category, searchText)
                 request.predicate = predicate
             }
             newses = try context.fetch(request)
@@ -54,6 +55,7 @@ class CoreDataManager {
         newRow.desc = newsModel.desc
         newRow.content = newsModel.content
         newRow.category = newsModel.category
+        newRow.bookmarkTick = newsModel.bookmarkTick
         
         do {
             try context.save()
@@ -84,16 +86,22 @@ class CoreDataManager {
         }
     }
     
-    func updateData(newsModel: NewsesMODEL, indexPath: IndexPath) {
-        let existedRow = newses[indexPath.row]
-        existedRow.title = newsModel.title
-        existedRow.time = newsModel.time
-        existedRow.imgURL = newsModel.imgURL
-        existedRow.url = newsModel.URL
-        existedRow.author = newsModel.author
-        existedRow.desc = newsModel.desc
-        existedRow.content = newsModel.content
-        existedRow.category = newsModel.category
+    func updateData(indexPath: IndexPath, flag: Bool) {
+        newses[indexPath.row].bookmarkTick = flag
+        do{
+            try context.save()
+        }
+        catch {
+            print(error)
+        }
+    }
+    
+    func deleteData(category: String) {
+        for news in newses {
+            if(news.category == category) {
+                context.delete(news)
+            }
+        }
         
         do{
             try context.save()
@@ -103,23 +111,27 @@ class CoreDataManager {
         }
     }
     
-    func deleteData(indexPath: IndexPath) {
-        let existedRow = newses[indexPath.row]
-        context.delete(existedRow)
-        
-        do{
-            try context.save()
-            newses.remove(at: indexPath.row)
+    func deleteFromBookmark(indexPath: IndexPath, from: String) {
+        if(from == "BookmarkVC") {
+            let findURL = bookmarks[indexPath.row].url
+            for item in newses {
+                if(item.url == findURL) {
+                    item.bookmarkTick = false
+                    context.delete(bookmarks[indexPath.row])
+                    break
+                }
+            }
         }
-        catch {
-            print(error)
+        else {
+            let findURL = newses[indexPath.row].url
+            newses[indexPath.row].bookmarkTick = false
+            for item in bookmarks {
+                if(item.url == findURL) {
+                    context.delete(item)
+                    break
+                }
+            }
         }
-    }
-    
-    func deleteFromBookmark(indexPath: IndexPath) {
-        let existedRow = bookmarks[indexPath.row]
-        context.delete(existedRow)
-        
         do{
             try context.save()
             bookmarks.remove(at: indexPath.row)

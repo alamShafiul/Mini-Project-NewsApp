@@ -16,4 +16,5 @@ struct NewsesMODEL {
     var desc: String
     var content: String
     var category: String
+    var bookmarkTick: Bool
 }

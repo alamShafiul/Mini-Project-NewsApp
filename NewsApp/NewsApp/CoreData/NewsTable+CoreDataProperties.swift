@@ -2,7 +2,7 @@
 //  NewsTable+CoreDataProperties.swift
 //  NewsApp
 //
-//  Created by Admin on 17/1/23.
+//  Created by Admin on 18/1/23.
 //
 //
 
@@ -24,6 +24,7 @@ extension NewsTable {
     @NSManaged public var desc: String?
     @NSManaged public var content: String?
     @NSManaged public var category: String?
+    @NSManaged public var bookmarkTick: Bool
 
 }
 

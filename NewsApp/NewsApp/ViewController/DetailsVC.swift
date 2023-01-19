@@ -18,10 +18,12 @@ class DetailsVC: UIViewController {
     var author: String = "unknown author"
     var content: String = ""
     var desc: String = ""
+    var bookmarkTick: Bool = false
     
     @IBOutlet weak var titleField: UILabel!
     @IBOutlet weak var timeField: UILabel!
     
+    @IBOutlet weak var bookmarkBtnOutlet: UIButton!
     @IBOutlet weak var imgView: UIImageView!
     
     @IBOutlet weak var authorField: UILabel!
@@ -31,16 +33,6 @@ class DetailsVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        titleField.text = getHome?.myArticles[(getHome?.idxPath.row)!].title
-//        timeField.text = getHome?.myArticles[(getHome?.idxPath!.row)!].time
-//
-//        let imgURL = getHome?.myArticles[(getHome?.idxPath.row)!].imgURL
-//        imgView.sd_setImage(with: URL(string: imgURL ?? ""), placeholderImage: UIImage(systemName: "photo"), context: nil)
-//
-//
-//        authorField.text = "Author: \(getHome?.myArticles[(getHome?.idxPath.row)!].author ?? "unknow author")"
-//        descField.text = getHome?.myArticles[(getHome?.idxPath.row)!].desc
-//        contentField.text = getHome?.myArticles[(getHome?.idxPath.row)!].content
         
         titleField.text = ti_tle
         timeField.text = time
@@ -48,13 +40,13 @@ class DetailsVC: UIViewController {
         authorField.text = author
         descField.text = desc
         contentField.text = content
+        bookmarkBtnOutlet.setImage(UIImage(systemName: bookmarkTick ? "bookmark.fill" : "bookmark"), for: .normal)
         
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == Constants.gotoWebSegue {
             if let webPage = segue.destination as? WKVC {
-                //webPage.forURL = getHome?.myArticles[(getHome?.idxPath.row)!].URL
                 webPage.forURL = url
             }
         }
@@ -62,6 +54,23 @@ class DetailsVC: UIViewController {
     
     @IBAction func moreBtnTapped(_ sender: Any) {
         performSegue(withIdentifier: Constants.gotoWebSegue, sender: nil)
+    }
+    
+    
+    @IBAction func bookmarkBtnTapped(_ sender: Any) {
+        
+        guard let getHome = getHome else {
+            return
+        }
+        
+        if bookmarkBtnOutlet.imageView?.image == UIImage(systemName: "bookmark") {
+            bookmarkBtnOutlet.setImage(UIImage(systemName: "bookmark.fill"), for: .normal)
+            getHome.bookMark(indexPath: (getHome.idxPath))
+        }
+        else {
+            bookmarkBtnOutlet.setImage(UIImage(systemName: "bookmark"), for: .normal)
+            CoreDataManager.shared.deleteFromBookmark(indexPath: (getHome.idxPath)!, from: "DetailsVC")
+        }
     }
     
 }

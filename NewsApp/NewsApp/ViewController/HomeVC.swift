@@ -10,25 +10,37 @@ import SDWebImage
 
 class HomeVC: UIViewController {
     
+    
 //MARK: - variables
     var selectedIndexForCV = IndexPath(item: 0, section: 0)
     var myArticles = [NewsesMODEL]()
     var idxPath: IndexPath!
     var refreshControl = UIRefreshControl()
     
+    
+    
 //MARK: - Outlets
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var leadingConstraints: NSLayoutConstraint!
+    @IBOutlet weak var searchBar: UISearchBar!
+    @IBOutlet weak var TopLabel: UILabel!
+    
+    
     
 //MARK: - For Controlling Navigation Bar
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.isNavigationBarHidden = true
+        leadingConstraints.constant = view.bounds.width
+        populateTableView(category: CatModels.category[selectedIndexForCV.row])
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         navigationController?.isNavigationBarHidden = false
     }
+    
+    
     
     
 //MARK: - ViewDidLoad
@@ -37,17 +49,27 @@ class HomeVC: UIViewController {
         
         setupCollectionView()
         setupTableView()
+        searchBar.delegate = self
         
         populateTableView(category: "All")
         
         refreshControl.addTarget(self, action: #selector(refreshTable), for: UIControl.Event.valueChanged)
         tableView.addSubview(refreshControl)
+        
     }
+    
+    
+    
+    //MARK: - Action Buttons
+    @IBAction func searchBtnTapped(_ sender: Any) {
+        doAnimation()
+    }
+    
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if(segue.identifier == Constants.gotoDetailsSegue) {
             if let detailsPage = segue.destination as? DetailsVC {
-                //detailsPage.getHome = self
+                detailsPage.getHome = self
                 detailsPage.ti_tle = myArticles[idxPath.row].title
                 detailsPage.time = myArticles[idxPath.row].time
                 detailsPage.imgURL = myArticles[idxPath.row].imgURL
@@ -55,11 +77,16 @@ class HomeVC: UIViewController {
                 detailsPage.author = myArticles[idxPath.row].author
                 detailsPage.content = myArticles[idxPath.row].content
                 detailsPage.desc = myArticles[idxPath.row].desc
+                detailsPage.bookmarkTick = myArticles[idxPath.row].bookmarkTick
             }
         }
     }
+    
 
 }
+
+
+
 
 //MARK: - All functions
 extension HomeVC {
@@ -68,16 +95,21 @@ extension HomeVC {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             print("refreshed....")
+            CoreDataManager.shared.deleteData(category: CatModels.category[self.selectedIndexForCV.row])
             self.pleaseCallAPI(category: CatModels.category[self.selectedIndexForCV.row])
             self.tableView.reloadData()
             self.refreshControl.endRefreshing()
         }
     }
     
+    
+    
+    
     //MARK: populateTableView
     func populateTableView(category: String) {
         // checking CoreData is empty or not
-        CoreDataManager.shared.getData(category: category)
+        CoreDataManager.shared.getData(category: category, searchText: " ")
+        
         if(CoreDataManager.shared.newses.count == 0) {
             pleaseCallAPI(category: category)
         }
@@ -86,42 +118,65 @@ extension HomeVC {
         }
     }
     
+    
+    
+    
     //MARK: storeInCoreData
     func storeInCoreData(category: String) {
         for item in myArticles {
-            let val = NewsesMODEL(title: item.title, time: item.time, imgURL: item.imgURL, URL: item.URL, author: item.author, desc: item.desc, content: item.content, category: category)
+            var flag = false
+            for book in CoreDataManager.shared.bookmarks {
+                if(item.URL == book.url) {
+                    flag = true
+                    break
+                }
+            }
+            let val = NewsesMODEL(title: item.title, time: item.time, imgURL: item.imgURL, URL: item.URL, author: item.author, desc: item.desc, content: item.content, category: category, bookmarkTick: flag)
             CoreDataManager.shared.addData(newsModel: val)
         }
     }
     
+    
+    
+    
     //MARK: getFromCoreData
     func getFromCoreData(category: String) {
-        CoreDataManager.shared.getData(category: category)
+        //CoreDataManager.shared.getData(category: category)
         let newses = CoreDataManager.shared.newses
         myArticles = []
         for news in newses {
             if let title = news.title, let time = news.time, let imgURL = news.imgURL, let URL = news.url, let author = news.author, let desc = news.desc, let content = news.content, let category = news.category {
-                let val = NewsesMODEL(title: title, time: time, imgURL: imgURL, URL: URL, author: author, desc: desc, content: content, category: category)
+                let val = NewsesMODEL(title: title, time: time, imgURL: imgURL, URL: URL, author: author, desc: desc, content: content, category: category, bookmarkTick: news.bookmarkTick)
                 myArticles.append(val)
             }
         }
         tableView.reloadData()
     }
     
+    
+    
+    
+    
     //MARK: pleaseCallAPI
     func pleaseCallAPI(category: String) {
         activityIndicator.startAnimating()
         ApiCaller.shared.getDataFromAPI(category: category, completion: { [weak self] getArray in
+            guard let self = self else { return }
             if let getArray = getArray {
-                self?.myArticles = getArray
-                self?.storeInCoreData(category: category)
                 DispatchQueue.main.async {
-                    self?.tableView.reloadData()
-                    self?.activityIndicator.stopAnimating()
+                    self.myArticles = getArray
+                    self.storeInCoreData(category: category)
+                    //specifically changed for bookmark when pull to refresh is applied
+                    self.populateTableView(category: category)
+                    self.tableView.reloadData()
+                    self.activityIndicator.stopAnimating()
                 }
             }
         })
     }
+    
+    
+    
     
     //MARK: bookMark
     func bookMark(indexPath: IndexPath)  {
@@ -131,9 +186,15 @@ extension HomeVC {
         }
         else {
             CoreDataManager.shared.addToBookTable(newsModel: myArticles[indexPath.row])
-            print("Add")
+            
+            CoreDataManager.shared.getData(category: CatModels.category[selectedIndexForCV.row], searchText: " ")
+            CoreDataManager.shared.updateData(indexPath: indexPath, flag: true)
+            getFromCoreData(category: CatModels.category[selectedIndexForCV.row])
         }
     }
+    
+    
+    
     
     //MARK: setupCollectionView
     func setupCollectionView() {
@@ -141,12 +202,19 @@ extension HomeVC {
         collectionView.dataSource = self
     }
     
+    
+    
+    
     //MARK: setupTableView
     func setupTableView() {
         tableView.delegate = self
         tableView.dataSource = self
     }
 }
+
+
+
+
 
 //MARK: - collectionViewDataSource
 extension HomeVC: UICollectionViewDataSource {
@@ -190,6 +258,10 @@ extension HomeVC: UICollectionViewDelegate {
     }
 }
 
+
+
+
+
 //MARK: - TableViewDataSource
 extension HomeVC: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -204,6 +276,11 @@ extension HomeVC: UITableViewDataSource {
         cell.titleField.text = myArticles[indexPath.row].title
         cell.authorField.text = myArticles[indexPath.row].author
         cell.dateField.text = myArticles[indexPath.row].time
+        cell.bookmarkView.image = UIImage(systemName: "bookmark")
+        
+        if(myArticles[indexPath.row].bookmarkTick == true) {
+            cell.bookmarkView.image = UIImage(systemName: "bookmark.fill")
+        }
         
         return cell
     }
@@ -225,6 +302,7 @@ extension HomeVC: UITableViewDelegate {
                 return
             }
             self.bookMark(indexPath: indexPath)
+            
             //completion(true)
         }
         bookmarkAction.image = UIImage(systemName: "bookmark.fill")
@@ -233,6 +311,29 @@ extension HomeVC: UITableViewDelegate {
         let actions = UISwipeActionsConfiguration(actions: [bookmarkAction])
         
         return actions
+    }
+}
+
+//MARK: - SearchBarDelegate
+extension HomeVC: UISearchBarDelegate {
+    func doAnimation() {
+        TopLabel.textColor = UIColor(named: "customColor")
+        UIView.animate(withDuration: 0.9, animations: { [weak self] in
+            self?.leadingConstraints.constant = 0
+            self?.view.layoutIfNeeded()
+        })
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        CoreDataManager.shared.getData(category: CatModels.category[selectedIndexForCV.row], searchText: searchText)
+        getFromCoreData(category: CatModels.category[selectedIndexForCV.row])
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        leadingConstraints.constant = view.bounds.width
+        TopLabel.textColor = .white
+        CoreDataManager.shared.getData(category: CatModels.category[selectedIndexForCV.row], searchText: " ")
+        getFromCoreData(category: CatModels.category[selectedIndexForCV.row])
     }
 }
 

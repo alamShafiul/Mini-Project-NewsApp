@@ -12,6 +12,7 @@
     </entity>
     <entity name="NewsTable" representedClassName="NewsTable" syncable="YES">
         <attribute name="author" optional="YES" attributeType="String"/>
+        <attribute name="bookmarkTick" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="category" optional="YES" attributeType="String"/>
         <attribute name="content" optional="YES" attributeType="String"/>
         <attribute name="desc" optional="YES" attributeType="String"/>
