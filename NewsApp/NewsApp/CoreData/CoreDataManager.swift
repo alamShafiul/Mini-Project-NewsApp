@@ -14,13 +14,14 @@ class CoreDataManager {
     
     var newses = [NewsTable]()
     var bookmarks = [BookmarkTable]()
+    var searchBookmarks = [BookmarkTable]()
     let context = AppDelegate.shared.persistentContainer.viewContext
     
-    func getData(category: String?) {
+    func getData(category: String?, searchText: String) {
         do {
             let request = NSFetchRequest<NewsTable>(entityName: "NewsTable")
             if let category = category {
-                let predicate = NSPredicate(format: "category == %@", category)
+                let predicate = NSPredicate(format: "category == %@ AND title CONTAINS %@", category, searchText)
                 request.predicate = predicate
             }
             newses = try context.fetch(request)
@@ -104,7 +105,6 @@ class CoreDataManager {
         
         do{
             try context.save()
-//            newses.remove(at: indexPath.row)
         }
         catch {
             print(error)

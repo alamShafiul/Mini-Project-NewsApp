@@ -23,13 +23,16 @@ class HomeVC: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-    
+    @IBOutlet weak var leadingConstraints: NSLayoutConstraint!
+    @IBOutlet weak var searchBar: UISearchBar!
+    @IBOutlet weak var TopLabel: UILabel!
     
     
     
 //MARK: - For Controlling Navigation Bar
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.isNavigationBarHidden = true
+        leadingConstraints.constant = view.bounds.width
         populateTableView(category: CatModels.category[selectedIndexForCV.row])
     }
     
@@ -46,12 +49,22 @@ class HomeVC: UIViewController {
         
         setupCollectionView()
         setupTableView()
+        searchBar.delegate = self
         
         populateTableView(category: "All")
         
         refreshControl.addTarget(self, action: #selector(refreshTable), for: UIControl.Event.valueChanged)
         tableView.addSubview(refreshControl)
+        
     }
+    
+    
+    
+    //MARK: - Action Buttons
+    @IBAction func searchBtnTapped(_ sender: Any) {
+        doAnimation()
+    }
+    
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if(segue.identifier == Constants.gotoDetailsSegue) {
@@ -68,6 +81,7 @@ class HomeVC: UIViewController {
             }
         }
     }
+    
 
 }
 
@@ -94,7 +108,7 @@ extension HomeVC {
     //MARK: populateTableView
     func populateTableView(category: String) {
         // checking CoreData is empty or not
-        CoreDataManager.shared.getData(category: category)
+        CoreDataManager.shared.getData(category: category, searchText: " ")
         
         if(CoreDataManager.shared.newses.count == 0) {
             pleaseCallAPI(category: category)
@@ -173,7 +187,7 @@ extension HomeVC {
         else {
             CoreDataManager.shared.addToBookTable(newsModel: myArticles[indexPath.row])
             
-            CoreDataManager.shared.getData(category: CatModels.category[selectedIndexForCV.row])
+            CoreDataManager.shared.getData(category: CatModels.category[selectedIndexForCV.row], searchText: " ")
             CoreDataManager.shared.updateData(indexPath: indexPath, flag: true)
             getFromCoreData(category: CatModels.category[selectedIndexForCV.row])
         }
@@ -297,6 +311,29 @@ extension HomeVC: UITableViewDelegate {
         let actions = UISwipeActionsConfiguration(actions: [bookmarkAction])
         
         return actions
+    }
+}
+
+//MARK: - SearchBarDelegate
+extension HomeVC: UISearchBarDelegate {
+    func doAnimation() {
+        TopLabel.textColor = UIColor(named: "customColor")
+        UIView.animate(withDuration: 0.9, animations: { [weak self] in
+            self?.leadingConstraints.constant = 0
+            self?.view.layoutIfNeeded()
+        })
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        CoreDataManager.shared.getData(category: CatModels.category[selectedIndexForCV.row], searchText: searchText)
+        getFromCoreData(category: CatModels.category[selectedIndexForCV.row])
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        leadingConstraints.constant = view.bounds.width
+        TopLabel.textColor = .white
+        CoreDataManager.shared.getData(category: CatModels.category[selectedIndexForCV.row], searchText: " ")
+        getFromCoreData(category: CatModels.category[selectedIndexForCV.row])
     }
 }
 
