@@ -31,6 +31,23 @@ class CoreDataManager {
         }
     }
     
+//    func getData(offset: Int, category: String?, searchText: String) {
+//        do {
+//            let request = NSFetchRequest<NewsTable>(entityName: "NewsTable")
+//            request.fetchLimit = 5
+//            request.fetchOffset = offset
+//            if let category = category {
+//                let predicate = NSPredicate(format: "category == %@ AND title CONTAINS %@", category, searchText)
+//                request.predicate = predicate
+//            }
+//            newses = try context.fetch(request)
+//        }
+//        catch {
+//            print(error)
+//        }
+//    }
+
+    
     func getFromBookmark(newsUrl: String?) {
         do {
             let request = NSFetchRequest<BookmarkTable>(entityName: "BookmarkTable")
