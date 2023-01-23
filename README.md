@@ -1,6 +1,6 @@
 # Newspaper
 
-## Get updated and aligned with trend 
+### Get updated and aligned with trend 
 
 ## Features:
 1. Get news from https://newsapi.org/
