@@ -31,6 +31,7 @@ class BookmarkVC: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.isNavigationBarHidden = true
         leadingConstraints.constant = view.bounds.width
+        TopLabel.textColor = .white
         CoreDataManager.shared.getFromBookmark(newsUrl: nil)
         loadBookmarkData()
     }

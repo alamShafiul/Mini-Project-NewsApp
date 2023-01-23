@@ -44,9 +44,17 @@ class DetailsVC: UIViewController {
         
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        tabBarController?.tabBar.isHidden = true
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        tabBarController?.tabBar.isHidden = false
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == Constants.gotoWebSegue {
-            if let webPage = segue.destination as? WKVC {
+            if let webPage = segue.destination as? WebKitVC {
                 webPage.forURL = url
             }
         }

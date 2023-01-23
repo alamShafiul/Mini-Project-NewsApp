@@ -13,7 +13,7 @@ class HomeVC: UIViewController {
 
     
 //MARK: - variables
-    //var currentoffset = 0
+    var currentoffset = 0
     var selectedIndexForCV = IndexPath(item: 0, section: 0)
     var myArticles = [NewsesMODEL]()
     var idxPath: IndexPath!
@@ -34,6 +34,7 @@ class HomeVC: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.isNavigationBarHidden = true
         leadingConstraints.constant = view.bounds.width
+        TopLabel.textColor = .white
         populateTableView(category: CatModels.category[selectedIndexForCV.row])
     }
     
@@ -339,16 +340,8 @@ extension HomeVC: UISearchBarDelegate {
 }
 
 
-//extension HomeVC{
-//    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-//        //print(indexPath)
-//        if indexPath.row == (myArticles.count - 1) {
-//            print(currentoffset)
-//
-//            //myArticles.append(())
-//            currentoffset = currentoffset + 10
-//
-//        }
-//    }
-//
-//}
+extension HomeVC{
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        print(indexPath)
+    }
+}

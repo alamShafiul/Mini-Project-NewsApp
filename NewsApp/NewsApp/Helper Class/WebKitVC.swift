@@ -8,7 +8,7 @@
 import UIKit
 import WebKit
 
-class WKVC: UIViewController {
+class WebKitVC: UIViewController {
 
     var forURL: String?
     
@@ -20,6 +20,14 @@ class WKVC: UIViewController {
         
         guard let url = URL(string: forURL ?? "") else { return }
         webView.load(URLRequest(url: url))
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        tabBarController?.tabBar.isHidden = true
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        tabBarController?.tabBar.isHidden = false
     }
 
 }
