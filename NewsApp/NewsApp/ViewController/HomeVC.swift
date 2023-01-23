@@ -90,35 +90,20 @@ extension HomeVC {
     func autoRefresh() {
         
         // return value in minute
-        let prev = UserDefaults.standard.string(forKey: CatModels.category[selectedIndexForCV.row]) ?? ""
-        let totalClosedTime = calculateClosingTime2(time: prev)
+        let prev = UserDefaults.standard.string(forKey: CatModels.category[selectedIndexForCV.row].uppercased()) ?? ""
+        print("PrevTime: \(prev)")
+        let totalClosedTime = calculateClosingTime(time: prev)
         print(totalClosedTime)
-        if(totalClosedTime >= 1.2) {
+        if(totalClosedTime >= 30) {
             pleaseCallAPI(category: CatModels.category[selectedIndexForCV.row])
         }
         else {
             populateTableView(category: CatModels.category[selectedIndexForCV.row])
         }
     }
+
     
-    func calculateClosingTime() -> Double {
-        let formatter = DateFormatter()
-        //formatter.dateFormat = "yyyy-MM-dd-hh-mm-ss"
-        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-        
-        let closingTime = UserDefaults.standard.string(forKey: CatModels.category[selectedIndexForCV.row]) ?? ""
-        print("closingTime: \(closingTime)")
-        guard let closedTime = formatter.date(from: closingTime) else {
-            return 0
-        }
-        print("closed: \(closedTime)")
-        let sec = Date().timeIntervalSince(closedTime)
-        let min = round(sec/60)
-        print("sec: \(sec), min: \(min)")
-        return min
-    }
-    
-    func calculateClosingTime2(time: String) -> Double {
+    func calculateClosingTime(time: String) -> Double {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
 
@@ -126,6 +111,7 @@ extension HomeVC {
         guard let date = date else {return 0.0}
         let passedTimeInSecond =  Date().timeIntervalSince(date)
         let minutes = round(passedTimeInSecond/60)
+        print("sec: \(passedTimeInSecond), min: \(minutes)")
         return minutes
     }
     
@@ -203,9 +189,9 @@ extension HomeVC {
                     self.tableView.reloadData()
                     self.activityIndicator.stopAnimating()
                     
-                    //let formatter = DateFormatter()
-                    //formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-                    //UserDefaults.standard.set(formatter.string(from: Date()), forKey: CatModels.category[self.selectedIndexForCV.row])
+                    let formatter = DateFormatter()
+                    formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+                    UserDefaults.standard.set(formatter.string(from: Date()), forKey: CatModels.category[self.selectedIndexForCV.row].uppercased())
                 }
             }
         })
@@ -265,7 +251,7 @@ extension HomeVC: UICollectionViewDelegate {
         guard let cell = collectionView.cellForItem(at: indexPath) as? customCVC else {
             return
         }
-        //autoRefresh()
+        autoRefresh()
         //pleaseCallAPI(category: CatModels.category[indexPath.row])
         populateTableView(category: CatModels.category[indexPath.row])
         
