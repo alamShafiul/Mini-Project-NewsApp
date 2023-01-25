@@ -21,7 +21,7 @@
 		8482A93B29758D0B00D89265 /* ApiCaller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8482A93A29758D0B00D89265 /* ApiCaller.swift */; };
 		8482A93E29758D7400D89265 /* NewsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8482A93D29758D7400D89265 /* NewsModel.swift */; };
 		8482A940297650E500D89265 /* DetailsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8482A93F297650E500D89265 /* DetailsVC.swift */; };
-		8482A9422976618F00D89265 /* WKVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8482A9412976618F00D89265 /* WKVC.swift */; };
+		8482A9422976618F00D89265 /* WebKitVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8482A9412976618F00D89265 /* WebKitVC.swift */; };
 		8482A94929766A0500D89265 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8482A94829766A0500D89265 /* CoreDataManager.swift */; };
 		8482A94B29766B1700D89265 /* NewsesMODEL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8482A94A29766B1700D89265 /* NewsesMODEL.swift */; };
 		8482A94D2976E59C00D89265 /* BookmarkVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8482A94C2976E59C00D89265 /* BookmarkVC.swift */; };
@@ -52,7 +52,7 @@
 		8482A93A29758D0B00D89265 /* ApiCaller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiCaller.swift; sourceTree = "<group>"; };
 		8482A93D29758D7400D89265 /* NewsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsModel.swift; sourceTree = "<group>"; };
 		8482A93F297650E500D89265 /* DetailsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsVC.swift; sourceTree = "<group>"; };
-		8482A9412976618F00D89265 /* WKVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WKVC.swift; sourceTree = "<group>"; };
+		8482A9412976618F00D89265 /* WebKitVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebKitVC.swift; sourceTree = "<group>"; };
 		8482A94829766A0500D89265 /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		8482A94A29766B1700D89265 /* NewsesMODEL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsesMODEL.swift; sourceTree = "<group>"; };
 		8482A94C2976E59C00D89265 /* BookmarkVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkVC.swift; sourceTree = "<group>"; };
@@ -189,7 +189,7 @@
 			isa = PBXGroup;
 			children = (
 				8482A93A29758D0B00D89265 /* ApiCaller.swift */,
-				8482A9412976618F00D89265 /* WKVC.swift */,
+				8482A9412976618F00D89265 /* WebKitVC.swift */,
 			);
 			path = "Helper Class";
 			sourceTree = "<group>";
@@ -334,7 +334,7 @@
 				8482A91E297564E300D89265 /* NewsApp.xcdatamodeld in Sources */,
 				8482A916297564E300D89265 /* SceneDelegate.swift in Sources */,
 				8482A93329757E5F00D89265 /* Constants.swift in Sources */,
-				8482A9422976618F00D89265 /* WKVC.swift in Sources */,
+				8482A9422976618F00D89265 /* WebKitVC.swift in Sources */,
 				8482A95229778AE100D89265 /* BookmarkTable+CoreDataClass.swift in Sources */,
 				8482A95329778AE100D89265 /* BookmarkTable+CoreDataProperties.swift in Sources */,
 				8482A94F2976E5FC00D89265 /* bookmarkTVC.swift in Sources */,
